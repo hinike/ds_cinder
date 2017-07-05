@@ -437,6 +437,7 @@ void Web::sendKeyDownEvent(const ci::app::KeyEvent &event) {
 	mService.sendKeyEvent(mBrowserId, 0, event.getNativeKeyCode(), event.getChar(), event.isShiftDown(), event.isControlDown(), event.isAltDown());
 
 	if(mEngine.getMode() == ds::ui::SpriteEngine::SERVER_MODE || mEngine.getMode() == ds::ui::SpriteEngine::CLIENTSERVER_MODE){
+		std::cout << "Web::sendKeyDownEvent" << std::endl;
 		mKeyPresses.push_back(WebKeyboardInput(0, event.getNativeKeyCode(), event.getChar(), event.isShiftDown(), event.isControlDown(), event.isAltDown()));
 		markAsDirty(KEYBOARD_DIRTY);
 	}

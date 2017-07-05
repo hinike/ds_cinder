@@ -485,6 +485,13 @@ void WebHandler::sendMouseWheelEvent(const int browserId, const int x, const int
 }
 
 void WebHandler::sendKeyEvent(const int browserId, const int state, int windows_key_code, char character, const bool shiftDown, const bool cntrlDown, const bool altDown){
+
+
+#ifndef  WIN32
+	DS_LOG_WARNING("WebHandler::sendKeyEvent");
+#endif // ! WIN32
+
+
 	// be sure this is locked with other requests to the browser list
 	base::AutoLock lock_scope(mLock);
 

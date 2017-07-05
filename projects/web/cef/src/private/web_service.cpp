@@ -227,6 +227,7 @@ void WebCefService::sendMouseWheelEvent(const int browserId, const int x, const 
 
 void WebCefService::sendKeyEvent(const int browserId, const int state, int windows_key_code, char character, const bool shiftDown, const bool cntrlDown, const bool altDown){
 	CefRefPtr<WebHandler> handler(WebHandler::GetInstance());
+	std::cout << "WebCefService::sendKeyEvent()" << std::endl;
 	if(handler){
 		handler->sendKeyEvent(browserId, state, windows_key_code, character, shiftDown, cntrlDown, cntrlDown);
 	}

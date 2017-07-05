@@ -305,6 +305,9 @@ void WebInterface::updateWidgets(){
 
 				mKeyboard->setKeyPressFunction([this](const std::wstring& character, ds::ui::SoftKeyboardDefs::KeyType keyType){
 					if(mLinkedWeb){
+
+						std::cout << "Key Pressed and Web Linked" << std::endl;
+
 						// spoof a keyevent to send to the web
 						bool send = true;
 						int code = 0;
