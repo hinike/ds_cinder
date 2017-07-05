@@ -511,6 +511,10 @@ void WebHandler::sendKeyEvent(const int browserId, const int state, int windows_
 		default:
 			isChar = true;
 			keyEvent.windows_key_code = character;
+#ifndef  WIN32
+			DS_LOG_WARNING("Setting a key-code of " << keyEvent.windows_key_code);
+#endif // ! WIN32
+
 	}
 
 	keyEvent.modifiers = 0;
@@ -549,13 +553,18 @@ void WebHandler::sendKeyEvent(const int browserId, const int state, int windows_
 
 			// This can be called on any thread
 			browserHost->SendKeyEvent(keyEvent);
-
+#ifndef  WIN32
+			DS_LOG_WARNING("SENT FROM STATE 0");
+#endif // ! WIN32
 		} else {
 			keyEvent.type = KEYEVENT_KEYUP;
 
 			//std::cout << "Key up: " << isChar << " " << character << " " << keyEvent.windows_key_code << " " << keyEvent.native_key_code << std::endl;
 			// This can be called on any thread
 			browserHost->SendKeyEvent(keyEvent);
+#ifndef  WIN32
+			DS_LOG_WARNING("SENT FROM STATE 0");
+#endif // ! WIN32
 		}
 	} else if(browserId >= 0) {
 		DS_LOG_WARNING("Couldn't find the correct browser to send key event to! BrowserId = " << browserId);
