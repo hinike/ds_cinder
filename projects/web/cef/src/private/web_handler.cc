@@ -554,7 +554,7 @@ void WebHandler::sendKeyEvent(const int browserId, const int state, int windows_
 			// This can be called on any thread
 			browserHost->SendKeyEvent(keyEvent);
 #ifndef  WIN32
-			DS_LOG_WARNING("SENT FROM STATE 0");
+			std::cout << "SENT FROM STATE 0" << std::endl;
 #endif // ! WIN32
 		} else {
 			keyEvent.type = KEYEVENT_KEYUP;
@@ -563,7 +563,8 @@ void WebHandler::sendKeyEvent(const int browserId, const int state, int windows_
 			// This can be called on any thread
 			browserHost->SendKeyEvent(keyEvent);
 #ifndef  WIN32
-			DS_LOG_WARNING("SENT FROM STATE 0");
+			std::cout << "SENT FROM STATE 1" << std::endl;
+
 #endif // ! WIN32
 		}
 	} else if(browserId >= 0) {
