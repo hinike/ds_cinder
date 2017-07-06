@@ -499,6 +499,7 @@ void WebHandler::sendKeyEvent(const int browserId, const int state, int windows_
 
 	bool isChar = false;
 	keyEvent.type = KEYEVENT_RAWKEYDOWN;
+
 #ifdef WIN32
     keyEvent.native_key_code = MapVirtualKey(windows_key_code, MAPVK_VK_TO_VSC);
 #else
@@ -518,6 +519,8 @@ void WebHandler::sendKeyEvent(const int browserId, const int state, int windows_
 		default:
 			isChar = true;
 			keyEvent.windows_key_code = character;
+			keyEvent.character = keyEvent.unmodified_character = character;
+
 #ifndef  WIN32
 			DS_LOG_WARNING("Setting a key-code of " << keyEvent.windows_key_code);
 #endif // ! WIN32
