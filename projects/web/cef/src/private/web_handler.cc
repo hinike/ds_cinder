@@ -520,10 +520,11 @@ void WebHandler::sendKeyEvent(const int browserId, const int state, int windows_
 			isChar = true;
 #ifdef WIN32
 			keyEvent.native_key_code = windows_key_code;
+			keyEvent.windows_key_code = character;
+
 #endif
 			keyEvent.unmodified_character = character;
 			keyEvent.character =  character;
-	//		std::cout << "It's a char!" << std::endl;
 
 	}
 
