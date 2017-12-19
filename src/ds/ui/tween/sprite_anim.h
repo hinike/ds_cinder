@@ -202,7 +202,7 @@ private:
 
 	// Store a CueRef from the cinder timeline to clear the callAfterDelay() function
 	// Cleared automatically on destruction
-	ci::CueRef			mDelayedCallCueRef;
+	std::vector<ci::CueRef>					mDelayedCallCueRefList;
 
 };
 

@@ -30,7 +30,6 @@ SpriteAnimatable::SpriteAnimatable(Sprite& s, SpriteEngine& e)
 	, mInternalSizeCinderTweenRef(nullptr)
 	, mInternalOpacityCinderTweenRef(nullptr)
 	, mInternalNormalizedCinderTweenRef(nullptr)
-	, mDelayedCallCueRef(nullptr)
 {}
 
 SpriteAnimatable::~SpriteAnimatable() {
@@ -41,7 +40,15 @@ SpriteAnimatable::~SpriteAnimatable() {
 	mInternalSizeCinderTweenRef = nullptr;
 	mInternalOpacityCinderTweenRef = nullptr;
 	mInternalNormalizedCinderTweenRef = nullptr;
-	mDelayedCallCueRef = nullptr;
+	if (!mDelayedCallCueRefList.empty())
+	{
+		for (auto delay : mDelayedCallCueRefList)
+		{
+			delay->removeSelf();
+			delay = nullptr;
+		}
+		mDelayedCallCueRefList.clear();
+	}
 }
 
 const SpriteAnim<ci::Color>& SpriteAnimatable::ANIM_COLOR() {
@@ -273,6 +280,17 @@ const bool SpriteAnimatable::getNormalizeTweenIsRunning(){
 }
 
 void SpriteAnimatable::animStop() {
+
+	if (!mDelayedCallCueRefList.empty())
+	{
+		for (auto delay : mDelayedCallCueRefList)
+		{
+			delay->removeSelf();
+			delay = nullptr;
+		}
+		mDelayedCallCueRefList.clear();
+	}
+
 	animPositionStop();
 	animRotationStop();
 	animScaleStop();
@@ -280,11 +298,6 @@ void SpriteAnimatable::animStop() {
 	animOpacityStop();
 	animColorStop();
 	animNormalizedStop();
-
-	if (mDelayedCallCueRef){
-		mDelayedCallCueRef->removeSelf();
-		mDelayedCallCueRef = nullptr;
-	}
 }
 
 void SpriteAnimatable::animPositionStop(){
@@ -399,8 +412,7 @@ void SpriteAnimatable::runAnimationScript(const std::string& animScript, const f
 	ci::EaseFn easing = ci::EaseInOutCubic();
 	float dur = 0.35f;
 	float delayey = addedDelay;
-	if (!&mOwner)
-		return;
+
 	ci::vec3 currentPos = mOwner.getPosition();
 
 	// This maps tracks all the types (scale, position, etc) and their destinations (as 3d vectors)
@@ -452,7 +464,7 @@ void SpriteAnimatable::runAnimationScript(const std::string& animScript, const f
 	{
 		std::string animType = it->first;
 		ci::vec3 dest = it->second;
-		if (animType == "center" && &mOwner){
+		if (animType == "center"){
 			auto currentCenter = mOwner.getCenter();
 			if (ci::vec2(currentCenter) == ci::vec2(dest))
 				break;
@@ -529,14 +541,10 @@ void SpriteAnimatable::runMultiAnimationScripts(const std::vector<std::string> a
 	float delay = 0.0f, gap = 0.0f;
 	delay =addedDelay;
 	gap = gapTime;
-	if (mDelayedCallCueRef){
-		mDelayedCallCueRef->removeSelf();
-		mDelayedCallCueRef = nullptr;
-	}
 	for (size_t i = 0; i < animScripts.size(); i++)
 	{
 		ci::Timeline&		t = mEngine.getTweenline().getTimeline();
-		mDelayedCallCueRef = t.add([this, delay, animScripts, i](){runAnimationScript(animScripts[i]); }, t.getCurrentTime() + delay);
+		mDelayedCallCueRefList.push_back(t.add([this, delay, animScripts, i](){runAnimationScript(animScripts[i]); }, t.getCurrentTime() + delay));
 		delay += (durationList[i] + delayList[i] + gap);
 	}
 }
